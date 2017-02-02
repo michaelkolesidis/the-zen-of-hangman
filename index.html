@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>Hangman</title>
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1, shrink-to-fit=no"
+    />
+    <meta name="description" content="Hangman game" />
+    <link rel="stylesheet" href="style.css" />
+    <link rel="shortcut icon" href="favicon.ico" type="image/x-icon">
+    <script src="main.js" type="module" defer></script>
+  </head>
+  <body>
+    <header>
+      <h1>Hangman</h1>
+    </header>
+    <div id="hangman">
+      <div class="drawing" id="drawing">
+        <div class="drawing__container"></div>
+        <div class="drawing__message"></div>
+      </div>
+      <div id="result"></div>
+    </div>
+    <div id="board">
+      <div id="chars" class="chars"></div>
+      <div id="keyboard" class="keyboard"></div>
+    </div>
+    <div id="modal" class="modal" style="display: none">
+      <div class="modal__background"></div>
+      <div class="modal__main">
+        <div class="modal__content"></div>
+        <div class="modal__actions">
+          <button id="new-game-button">Play New Game</button>
+        </div>
+      </div>
+    </div>
+    <footer>
+      Developed by <a href="https://michaelkolesidis.com">Michael Kolesidis</a>
+    </footer>
+  </body>
+</html>
