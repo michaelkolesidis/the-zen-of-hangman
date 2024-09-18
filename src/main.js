@@ -1,7 +1,7 @@
 import { wordList } from './wordList.js';
+import { Hangman } from './Hangman.js';
 
 let game = null;
-const MAX_FAULTS = 9;
 
 const reinitGame = () => {
   game = initNewGame();
@@ -137,103 +137,10 @@ const listenForInputs = (callback) => {
   });
 };
 
-class Hangman {
-  constructor(word, onEndGame) {
-    this.word = word.toUpperCase();
-    this.pickedLetters = [];
-    this.faults = 0;
-    this.onEndGame = onEndGame;
-  }
-
-  getWord() {
-    return this.word;
-  }
-
-  getCharsOfWord() {
-    return this.word.split('');
-  }
-
-  getLettersOfWord() {
-    const chars = this.getCharsOfWord();
-    return chars
-      .filter((char) => char.match(/[A-Z]/))
-      .filter((char, index, list) => list.indexOf(char) === index);
-  }
-
-  getNumberOfFaults() {
-    return this.faults;
-  }
-
-  getFaultyLetters() {
-    return this.pickedLetters.filter((letter) => {
-      return !this.word.includes(letter);
-    });
-  }
-
-  getFoundLetters() {
-    return this.pickedLetters.filter((letter) => {
-      return this.word.includes(letter);
-    });
-  }
-
-  getCharList() {
-    const chars = this.getCharsOfWord();
-    return chars.map((char) => {
-      const isLetter = char.match(/[A-z]/);
-      const pickedLetterAlready = this.pickedLetters.includes(char);
-      const show = pickedLetterAlready || !isLetter;
-      return { isLetter, show, value: char };
-    });
-  }
-
-  pickedLetter(letter) {
-    const alreadyPicked = this.pickedLetters.includes(letter);
-    const contains = this.word.includes(letter);
-
-    if (alreadyPicked) {
-      console.log('Uuh, you already picked that letter');
-      return;
-    }
-
-    this.pickedLetters.push(letter);
-
-    if (contains) {
-      console.log('Yeah, you are great!');
-    } else {
-      console.log('Oh no, try it again');
-      this.pickedLetters.push(letter);
-      this.faults += 1;
-    }
-
-    if (this.isFinished()) {
-      this.onEndGame();
-    }
-  }
-
-  hasWon() {
-    const letters = this.getLettersOfWord();
-    return (
-      !this.hasLost() &&
-      letters.every((char) => {
-        return this.pickedLetters.includes(char);
-      })
-    );
-  }
-
-  hasLost() {
-    return this.faults >= MAX_FAULTS;
-  }
-
-  isFinished() {
-    return this.hasLost() || this.hasWon();
-  }
-}
-
 game = initNewGame();
 listenForInputs((letter) => {
   guessLetter(letter);
 });
 
 const newGameButton = document.getElementById('new-game-button');
-
 newGameButton.addEventListener('click', reinitGame);
