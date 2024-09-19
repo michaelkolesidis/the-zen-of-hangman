@@ -11,7 +11,7 @@
 
 body {
   padding: 16px;
-  font-family: 'Arial Black', sans-serif;
+  font-family: 'Archivo Black', 'Arial Black', sans-serif;
   font-size: 100%;
 }
 
@@ -300,4 +300,46 @@ footer a:hover {
   text-transform: uppercase;
   letter-spacing: 1px;
   cursor: pointer;
+}
+
+@media only screen and (max-width: 768px) {
+  h1 {
+    display: none;
+  }
+
+  .drawing__container {
+    max-width: 60%;
+    height: 10rem;
+  }
+
+  .drawing__message {
+    font-size: 0.9rem;
+  }
+
+  .chars {
+    padding: 1rem 0rem;
+    min-height: 8.1rem;
+  }
+
+  .chars__char {
+    width: 2.08rem;
+    height: 2.4rem;
+  }
+
+  .keyboard {
+    padding: 0;
+  }
+
+  .keyboard__key {
+    margin: 0 0.55rem 0.55rem 0;
+    padding: 0.55rem 0;
+  }
+
+  .modal__main {
+    max-width: 80%;
+  }
+
+  footer {
+    margin: 1rem 0 0rem;
+  }
 }

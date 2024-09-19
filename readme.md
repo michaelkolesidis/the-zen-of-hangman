@@ -2,7 +2,7 @@
 
 ![Screenshot](./screenshot.png)
 
-Minimal Hangman made with JavaScript.
+Minimal Hangman made with JavaScript. Optimised for mobile.
 
 ## License
 
