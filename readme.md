@@ -1,6 +1,6 @@
-# Hangman
+# The Zen of Hangman
 
-![Screenshot](./screenshot.png)
+![Screenshot](./screenshot_00.png)
 
 Minimal Hangman made with JavaScript. Optimised for mobile.
 

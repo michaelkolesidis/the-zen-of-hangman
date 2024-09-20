@@ -21,8 +21,8 @@ const showModal = (content) => {
 
 const gameEndHandler = () => {
   const content = game.hasWon()
-    ? `Great, you are a winner!`
-    : `Oh no, you fucked up! We were looking for <em>${game.getWord()}</em>.`;
+    ? `A serene victory! The word reveals its beauty.`
+    : `Loss is but a fleeting moment. The word was <em>${game.getWord()}</em>.`;
   showModal(content);
 };
 
@@ -65,16 +65,16 @@ const drawHangman = (faults) => {
 
 const drawResult = (faults) => {
   const texts = [
-    /* 0 */ "Let's find that word!",
-    /* 1 */ 'Oops, wrong letter. Try again!',
-    /* 2 */ "Don't worry, everything is fine.",
-    /* 3 */ "It's alright, you got this.",
-    /* 4 */ 'Careful now, getting risky!',
-    /* 5 */ 'Things are heating up.',
-    /* 6 */ "Uh-oh! It's getting serious.",
-    /* 7 */ "Danger! You're on thin ice!",
-    /* 7 */ 'You are playing with fire...',
-    /* 9 */ 'R.I.P.',
+    /* 0 */ 'A journey of discovery begins.',
+    /* 1 */ 'Mistakes remind us of the path.',
+    /* 2 */ 'Clarity takes time and patience.',
+    /* 3 */ 'Trusting the process brings peace.',
+    /* 4 */ 'Embracing uncertainty fuels progress.',
+    /* 5 */ 'Challenges are part of the journey.',
+    /* 6 */ 'Every mistake offers a lesson.',
+    /* 7 */ 'In stillness, you navigate wisely.',
+    /* 8 */ 'Balance thought and intuition.',
+    /* 9 */ 'In silence, beauty awaits anew.',
   ];
 
   const container = document.querySelector('#drawing .drawing__message');
@@ -144,3 +144,5 @@ listenForInputs((letter) => {
 
 const newGameButton = document.getElementById('new-game-button');
 newGameButton.addEventListener('click', reinitGame);
+
+document.addEventListener('contextmenu', (event) => event.preventDefault());

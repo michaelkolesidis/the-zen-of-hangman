@@ -1,7 +1,24 @@
 :root {
-  --main-color: rgb(0, 62, 230);
+  --opacity: 0.07;
+
+  --main-color-rgb: 0, 62, 230;
+  --main-color: rgb(var(--main-color-rgb));
+  --main-color-translucent: rgba(var(--main-color-rgb), var(--opacity));
+
   --white: rgb(255, 255, 255);
-  --black: rgb(0, 0, 0);
+
+  --black-rgb: 0, 0, 0;
+  --black: rgb(var(--black-rgb));
+  --black-opacity: 0.6;
+  --black-translucent: rgba(var(--black-rgb), var(--black-opacity));
+
+  --correct-rgb: 102, 226, 213;
+  --correct: rgb(var(--correct-rgb));
+  --correct-translucent: rgba(var(--correct-rgb), var(--opacity));
+
+  --wrong-rgb: 254, 0, 0;
+  --wrong: rgb(var(--wrong-rgb));
+  --wrong-translucent: rgba(var(--wrong-rgb), var(--opacity));
 }
 
 * {
@@ -10,9 +27,10 @@
 }
 
 body {
-  padding: 16px;
+  padding: 12px;
   font-family: 'Archivo Black', 'Arial Black', sans-serif;
   font-size: 100%;
+  background-color: var(--white);
 }
 
 header {
@@ -27,30 +45,8 @@ h1 {
   text-transform: uppercase;
   letter-spacing: 2px;
   cursor: default;
-  user-select: none;
-  transition: all 180ms ease;
-}
-
-h1:hover {
-  letter-spacing: 4px;
-  transform: scale(1.1) rotate(-4deg);
-}
-
-h1:before {
-  height: 4px;
-  content: ' ';
-  display: block;
-  position: absolute;
-  bottom: 0;
-  left: 100%;
-  right: 0;
-  transition: all 180ms ease;
-}
-
-h1:hover:before {
-  left: 0;
-  background: var(--black);
-  height: 5px;
+  font-size: 2rem;
+  font-weight: 900;
 }
 
 footer {
@@ -72,7 +68,7 @@ footer a:hover {
 .chars {
   display: flex;
   flex-wrap: wrap;
-  align-items: flex-end;
+  align-items: center;
   justify-content: center;
   padding: 3rem 1rem;
 }
@@ -112,7 +108,7 @@ footer a:hover {
   border-radius: 3px;
   outline: none;
   border: none;
-  background-color: rgba(0, 62, 230, 0.07);
+  background-color: var(--main-color-translucent);
   color: var(--main-color);
   font: inherit;
   font-size: 1.3rem;
@@ -121,14 +117,14 @@ footer a:hover {
 }
 
 .keyboard__key--found {
-  background-color: rgba(102, 226, 213, 0.07);
-  color: rgb(102, 226, 213);
+  background-color: var(--correct-translucent);
+  color: var(--correct);
   cursor: default;
 }
 
 .keyboard__key--is-faulty {
-  background-color: rgba(254, 0, 0, 0.07);
-  color: rgb(254, 0, 0);
+  background-color: var(--wrong-translucent);
+  color: var(--wrong);
   cursor: default;
 }
 
@@ -262,7 +258,7 @@ footer a:hover {
   right: 0;
   bottom: 0;
   left: 0;
-  background-color: rgba(0, 0, 0, 0.6);
+  background-color: var(--black-translucent);
 }
 
 .modal__main {
@@ -302,9 +298,18 @@ footer a:hover {
   cursor: pointer;
 }
 
+#mobile-title {
+  display: none;
+}
+
 @media only screen and (max-width: 768px) {
-  h1 {
+  #desktop-title {
     display: none;
+  }
+
+  #mobile-title {
+    display: block;
+    font-size: 1.2rem;
   }
 
   .drawing__container {
@@ -313,7 +318,7 @@ footer a:hover {
   }
 
   .drawing__message {
-    font-size: 0.9rem;
+    font-size: 0.8rem;
   }
 
   .chars {
@@ -324,6 +329,7 @@ footer a:hover {
   .chars__char {
     width: 2.08rem;
     height: 2.4rem;
+       line-height: 1.5rem;
   }
 
   .keyboard {
@@ -341,5 +347,9 @@ footer a:hover {
 
   footer {
     margin: 1rem 0 0rem;
+  }
+
+  .modal {
+    top: 10.5rem;
   }
 }
