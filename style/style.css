@@ -266,7 +266,7 @@ footer a:hover {
   z-index: 1;
   box-shadow: 5px 5px 0 1px var(--main-color);
   border: 3px solid var(--main-color);
-  padding: 2rem;
+  padding: 1.75rem;
   background-color: var(--white);
 }
 
@@ -281,7 +281,7 @@ footer a:hover {
 }
 
 .modal__actions {
-  margin-top: 2rem;
+  margin-top: 1rem;
   text-align: center;
 }
 
@@ -296,6 +296,11 @@ footer a:hover {
   text-transform: uppercase;
   letter-spacing: 1px;
   cursor: pointer;
+}
+
+.modal__streak {
+  font-size: 0.9rem;
+  color: var(--main-color);
 }
 
 #mobile-title {
@@ -329,7 +334,7 @@ footer a:hover {
   .chars__char {
     width: 2.08rem;
     height: 2.4rem;
-       line-height: 1.5rem;
+    line-height: 1.5rem;
   }
 
   .keyboard {

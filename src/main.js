@@ -2,6 +2,7 @@ import { wordList } from './wordList.js';
 import { Hangman } from './Hangman.js';
 
 let game = null;
+let streak = 0;
 
 const reinitGame = () => {
   game = initNewGame();
@@ -20,9 +21,12 @@ const showModal = (content) => {
 };
 
 const gameEndHandler = () => {
+  streak = game.hasWon() ? streak + 1 : 0;
+
   const content = game.hasWon()
-    ? `A serene victory! The word reveals its beauty.`
+    ? `A serene victory! The word reveals its beauty.<br><div class='modal__streak'>Streak: ${streak}<div>`
     : `Loss is but a fleeting moment. The word was <em>${game.getWord()}</em>.`;
+
   showModal(content);
 };
 
@@ -130,10 +134,13 @@ const drawGame = (hangman) => {
 
 const listenForInputs = (callback) => {
   window.addEventListener('keydown', (event) => {
-    const pressedOtherKey = event.altKey || event.ctrlKey || event.metaKey; // Shift key is allowed
-    const key = event.key.toUpperCase();
-    const isLetter = key.match(/[A-Z]/);
-    !pressedOtherKey && isLetter && callback(key);
+    const pressedOtherKey = event.altKey || event.ctrlKey || event.metaKey || event.shiftKey; 
+    const key = event.key.toUpperCase(); 
+    const isLetter = /^[A-Z]$/.test(key);
+    
+    if (!pressedOtherKey && isLetter) {
+      callback(key);
+    }
   });
 };
 
