@@ -7697,7 +7697,6 @@ export const wordList = [
   'swaziland',
   'varieties',
   'arbor',
-  'mediawiki',
   'configurations',
   'poison',
 ];
