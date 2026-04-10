@@ -1,3 +1,4 @@
+import './style.css';
 import { wordList } from './wordList.js';
 import { Hangman } from './Hangman.js';
 
