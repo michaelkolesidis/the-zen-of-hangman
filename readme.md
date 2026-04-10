@@ -1,4 +1,4 @@
-![Screenshot](./screenshot_00.png)
+![Screenshot](./screenshot_01.png)
 
 Minimal Hangman made with JavaScript. Optimised for mobile.
 

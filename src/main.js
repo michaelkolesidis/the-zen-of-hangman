@@ -15,7 +15,7 @@ const hideModal = () => {
 
 const showModal = (content) => {
   const modal = document.getElementById('modal');
-  const modalContent = modal.querySelector('.modal__content');
+  const modalContent = modal.querySelector('.modal_content');
   modalContent.innerHTML = content;
   setTimeout(() => (modal.style.display = ''), 300);
 };
@@ -24,7 +24,7 @@ const gameEndHandler = () => {
   streak = game.hasWon() ? streak + 1 : 0;
 
   const content = game.hasWon()
-    ? `A serene victory! The word reveals its beauty.<br><div class='modal__streak'>Streak: ${streak}<div>`
+    ? `<em>${game.getWord()}</em><br>The word reveals its beauty.<br><div class='modal_streak'>Streak: ${streak}<div>`
     : `Loss is but a fleeting moment. The word was <em>${game.getWord()}</em>.`;
 
   showModal(content);
@@ -51,37 +51,37 @@ const guessLetter = (letter) => {
 
 const drawHangman = (faults) => {
   const parts = [
-    '<div class="drawing__part drawing__part-1"></div>',
-    '<div class="drawing__part drawing__part-2"></div>',
-    '<div class="drawing__part drawing__part-3"></div>',
-    '<div class="drawing__part drawing__part-4">ツ</div>',
-    '<div class="drawing__part drawing__part-5"></div>',
-    `<div class="drawing__part drawing__part-6a"></div>`,
-    `<div class="drawing__part drawing__part-6b"></div>`,
-    `<div class="drawing__part drawing__part-7a"></div>`,
-    `<div class="drawing__part drawing__part-7b"></div>`,
+    '<div class="drawing_part drawing_part-1"></div>',
+    '<div class="drawing_part drawing_part-2"></div>',
+    '<div class="drawing_part drawing_part-3"></div>',
+    '<div class="drawing_part drawing_part-4">ツ</div>',
+    '<div class="drawing_part drawing_part-5"></div>',
+    `<div class="drawing_part drawing_part-6a"></div>`,
+    `<div class="drawing_part drawing_part-6b"></div>`,
+    `<div class="drawing_part drawing_part-7a"></div>`,
+    `<div class="drawing_part drawing_part-7b"></div>`,
   ];
 
   const visibleParts = parts.splice(0, faults);
-  const parent = document.querySelector('#drawing .drawing__container');
+  const parent = document.querySelector('#drawing .drawing_container');
   parent.innerHTML = visibleParts.join('');
 };
 
 const drawResult = (faults) => {
   const texts = [
-    /* 0 */ 'A journey of discovery begins.',
-    /* 1 */ 'Mistakes remind us of the path.',
-    /* 2 */ 'Clarity takes time and patience.',
-    /* 3 */ 'Trusting the process brings peace.',
-    /* 4 */ 'Embracing uncertainty fuels progress.',
-    /* 5 */ 'Challenges are part of the journey.',
-    /* 6 */ 'Every mistake offers a lesson.',
-    /* 7 */ 'In stillness, you navigate wisely.',
-    /* 8 */ 'Balance thought and intuition.',
-    /* 9 */ 'In silence, beauty awaits anew.',
+    /* 0 */ 'first step, no path',
+    /* 1 */ 'a wrong turn, still walking',
+    /* 2 */ 'the mind clears',
+    /* 3 */ 'no need to force',
+    /* 4 */ 'uncertainty remains',
+    /* 5 */ 'mountains do not hurry',
+    /* 6 */ 'error returns to silence',
+    /* 7 */ 'stillness reveals the way',
+    /* 8 */ 'wind moves, mind is still',
+    /* 9 */ 'in silence, beauty awaits anew',
   ];
 
-  const container = document.querySelector('#drawing .drawing__message');
+  const container = document.querySelector('#drawing .drawing_message');
   container.innerText = texts[faults];
 };
 
@@ -99,9 +99,9 @@ const drawKeyboard = (foundLetters, faultyLetters) => {
     const el = document.createElement('button');
     el.innerText = key.letter;
     el.disabled = key.found || key.faulty;
-    el.className = 'keyboard__key';
-    key.found && el.classList.add('keyboard__key--found');
-    key.faulty && el.classList.add('keyboard__key--is-faulty');
+    el.className = 'keyboard_key';
+    key.found && el.classList.add('keyboard_key--found');
+    key.faulty && el.classList.add('keyboard_key--is-faulty');
 
     el.onclick = () => {
       guessLetter(key.letter);
@@ -117,8 +117,8 @@ const drawCharList = (chars) => {
 
   chars.forEach((char) => {
     const charEl = document.createElement('div');
-    charEl.className = `chars__char ${
-      char.isLetter ? 'chars__char--is-letter' : ''
+    charEl.className = `chars_char ${
+      char.isLetter ? 'chars_char--is-letter' : ''
     }`;
     charEl.innerText = char.show ? char.value : '';
     parent.appendChild(charEl);
@@ -134,10 +134,11 @@ const drawGame = (hangman) => {
 
 const listenForInputs = (callback) => {
   window.addEventListener('keydown', (event) => {
-    const pressedOtherKey = event.altKey || event.ctrlKey || event.metaKey || event.shiftKey; 
-    const key = event.key.toUpperCase(); 
+    const pressedOtherKey =
+      event.altKey || event.ctrlKey || event.metaKey || event.shiftKey;
+    const key = event.key.toUpperCase();
     const isLetter = /^[A-Z]$/.test(key);
-    
+
     if (!pressedOtherKey && isLetter) {
       callback(key);
     }
