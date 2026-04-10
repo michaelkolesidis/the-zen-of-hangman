@@ -69,7 +69,7 @@ const drawHangman = (faults) => {
 
 const drawResult = (faults) => {
   const texts = [
-    /* 0 */ 'first step, no path',
+    /* 0 */ 'a journey of discovery awaits',
     /* 1 */ 'a wrong turn, still walking',
     /* 2 */ 'the mind clears',
     /* 3 */ 'no need to force',
