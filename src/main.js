@@ -146,6 +146,11 @@ const listenForInputs = (callback) => {
   });
 };
 
+const canRestart = () => {
+  const modal = document.getElementById('modal');
+  return game && game.isFinished() && modal.style.display !== 'none';
+};
+
 game = initNewGame();
 listenForInputs((letter) => {
   guessLetter(letter);
@@ -153,5 +158,14 @@ listenForInputs((letter) => {
 
 const newGameButton = document.getElementById('new-game-button');
 newGameButton.addEventListener('click', reinitGame);
+
+window.addEventListener('keydown', (event) => {
+  if (!canRestart()) return;
+
+  if (event.code === 'Space' || event.code === 'Enter') {
+    event.preventDefault();
+    reinitGame();
+  }
+});
 
 document.addEventListener('contextmenu', (event) => event.preventDefault());

@@ -7706,4 +7706,7 @@ export const wordList = [
   'arbor',
   'configurations',
   'poison',
+  'lignite',
+  'sedimentary',
+  'carbohydrate',
 ];
