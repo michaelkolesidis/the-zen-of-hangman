@@ -3,86 +3,43 @@ export class Hangman {
 
   #word;
   #targetLetters;
-  #pickedLetters = new Set();
+  #picked = new Set();
   #faults = 0;
-  #onEndGame;
+  #onEnd;
 
   constructor(word, onEndGame) {
     this.#word = word.toUpperCase();
-    this.#onEndGame = onEndGame;
-
-    const lettersOnly = this.#word.match(/[A-Z]/g) || [];
-    this.#targetLetters = new Set(lettersOnly);
+    this.#onEnd = onEndGame;
+    this.#targetLetters = new Set(this.#word.match(/[A-Z]/g) || []);
   }
 
-  getWord() {
-    return this.#word;
+  get word()         { return this.#word; }
+  get faults()       { return this.#faults; }
+  get faultyLetters(){ return [...this.#picked].filter(c => !this.#targetLetters.has(c)); }
+  get foundLetters() { return [...this.#picked].filter(c => this.#targetLetters.has(c)); }
+  get isLost()       { return this.#faults >= this.MAX_FAULTS; }
+  get isFinished()   { return this.isLost || this.isWon; }
+  
+  get isWon() {
+    return this.#targetLetters.size > 0 && 
+           [...this.#targetLetters].every(c => this.#picked.has(c));
   }
 
-  getCharsOfWord() {
-    return [...this.#word];
-  }
-
-  getLettersOfWord() {
-    return [...this.#targetLetters];
-  }
-
-  getNumberOfFaults() {
-    return this.#faults;
-  }
-
-  getFaultyLetters() {
-    return [...this.#pickedLetters].filter(
-      (letter) => !this.#targetLetters.has(letter),
-    );
-  }
-
-  getFoundLetters() {
-    return [...this.#pickedLetters].filter((letter) =>
-      this.#targetLetters.has(letter),
-    );
-  }
-
-  getCharList() {
-    return [...this.#word].map((char) => {
+  get charList() {
+    return [...this.#word].map(char => {
       const isLetter = /[A-Z]/.test(char);
-      const show = this.#pickedLetters.has(char) || !isLetter;
-      return { isLetter, show, value: char };
+      return { isLetter, show: !isLetter || this.#picked.has(char), value: char };
     });
   }
 
-  pickedLetter(letter) {
+  guess(letter) {
     const char = letter.toUpperCase();
+    
+    if (this.isFinished || this.#picked.has(char)) return;
 
-    if (this.isFinished() || this.#pickedLetters.has(char)) {
-      return;
-    }
-
-    this.#pickedLetters.add(char);
-
-    if (!this.#targetLetters.has(char)) {
-      this.#faults++;
-    }
-
-    if (this.isFinished()) {
-      this.#onEndGame?.();
-    }
-  }
-
-  hasWon() {
-    if (this.hasLost() || this.#targetLetters.size === 0) return false;
-
-    for (const char of this.#targetLetters) {
-      if (!this.#pickedLetters.has(char)) return false;
-    }
-    return true;
-  }
-
-  hasLost() {
-    return this.#faults >= this.MAX_FAULTS;
-  }
-
-  isFinished() {
-    return this.hasLost() || this.hasWon();
+    this.#picked.add(char);
+    
+    if (!this.#targetLetters.has(char)) this.#faults++;
+    if (this.isFinished) this.#onEnd?.();
   }
 }

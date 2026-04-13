@@ -2,130 +2,92 @@ import './style.css';
 import { wordList } from './wordList.js';
 import { Hangman } from './Hangman.js';
 
-let game = null;
+let game;
 let streak = 0;
 
+const $ = selector => document.querySelector(selector);
 const DOM = {
-  modal: document.getElementById('modal'),
-  modalContent: document.querySelector('#modal .modal_content'),
-  drawingContainer: document.querySelector('#drawing .drawing_container'),
-  drawingMessage: document.querySelector('#drawing .drawing_message'),
-  keyboard: document.getElementById('keyboard'),
-  chars: document.getElementById('chars'),
-  newGameBtn: document.getElementById('new-game-button'),
+  modal: $('#modal'),
+  modalContent: $('#modal .modal_content'),
+  drawing: $('#drawing .drawing_container'),
+  message: $('#drawing .drawing_message'),
+  keyboard: $('#keyboard'),
+  chars: $('#chars'),
 };
 
-const DRAWING_PARTS = [
-  '<div class="drawing_part drawing_part-1"></div>',
-  '<div class="drawing_part drawing_part-2"></div>',
-  '<div class="drawing_part drawing_part-3"></div>',
-  '<div class="drawing_part drawing_part-4">ツ</div>',
-  '<div class="drawing_part drawing_part-5"></div>',
-  '<div class="drawing_part drawing_part-6a"></div>',
-  '<div class="drawing_part drawing_part-6b"></div>',
-  '<div class="drawing_part drawing_part-7a"></div>',
-  '<div class="drawing_part drawing_part-7b"></div>',
-];
-
 const MESSAGES = [
-  'a journey of discovery awaits',
-  'a wrong turn, still walking',
-  'the mind clears',
-  'no need to force',
-  'uncertainty remains',
-  'mountains do not hurry',
-  'error returns to silence',
-  'stillness reveals the way',
-  'wind moves, mind is still',
+  'a journey of discovery awaits', 'a wrong turn, still walking', 'the mind clears',
+  'no need to force', 'uncertainty remains', 'mountains do not hurry',
+  'error returns to silence', 'stillness reveals the way', 'wind moves, mind is still',
   'in silence, beauty awaits anew',
 ];
 
+const DRAWING_PARTS = [1, 2, 3, 4, 5, '6a', '6b', '7a', '7b'].map(
+  id => `<div class="drawing_part drawing_part-${id}">${id === 4 ? 'ツ' : ''}</div>`
+);
+
 const toggleModal = (show, content = '') => {
   if (content) DOM.modalContent.innerHTML = content;
-  if (show) setTimeout(() => (DOM.modal.style.display = ''), 300);
-  else DOM.modal.style.display = 'none';
+  DOM.modal.style.display = show ? '' : 'none';
 };
 
-const gameEndHandler = () => {
-  const isWin = game.hasWon();
-  streak = isWin ? streak + 1 : 0;
-
-  toggleModal(
-    true,
-    isWin
-      ? `<em>${game.getWord()}</em><br>The word reveals its beauty.<br><div class='modal_streak'>Streak: ${streak}</div>`
-      : `Loss is but a fleeting moment. The word was <em>${game.getWord()}</em>.`,
+const handleGameEnd = () => {
+  streak = game.isWon ? streak + 1 : 0;
+  toggleModal(true, game.isWon
+    ? `<em>${game.word}</em><br>The word reveals its beauty.<br><div class='modal_streak'>Streak: ${streak}</div>`
+    : `Loss is but a fleeting moment. The word was <em>${game.word}</em>.`
   );
 };
 
 const initNewGame = () => {
   const randomWord = wordList[Math.floor(Math.random() * wordList.length)];
-  game = new Hangman(randomWord, gameEndHandler);
+  game = new Hangman(randomWord, handleGameEnd);
   toggleModal(false);
-  drawGame();
+  render();
 };
 
-const guessLetter = (letter) => {
-  if (!game?.isFinished()) {
-    game.pickedLetter(letter);
-    drawGame();
+const render = () => {
+  const { faults, charList, foundLetters, faultyLetters } = game;
+
+  DOM.message.innerText = MESSAGES[faults];
+  DOM.drawing.innerHTML = DRAWING_PARTS.slice(0, faults).join('');
+
+  DOM.chars.innerHTML = charList.map(({ isLetter, show, value }) => 
+    `<div class="chars_char ${isLetter ? 'chars_char--is-letter' : ''}">${show ? value : ''}</div>`
+  ).join('');
+
+  DOM.keyboard.innerHTML = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'.split('').map(char => {
+    const isFound = foundLetters.includes(char);
+    const isFaulty = faultyLetters.includes(char);
+    const stateClass = isFound ? 'keyboard_key--found' : isFaulty ? 'keyboard_key--is-faulty' : '';
+    
+    return `<button class="keyboard_key ${stateClass}" ${isFound || isFaulty ? 'disabled' : ''} data-key="${char}">${char}</button>`;
+  }).join('');
+};
+
+DOM.keyboard.addEventListener('click', e => {
+  if (e.target.matches('button') && !game?.isFinished) {
+    game.guess(e.target.dataset.key);
+    render();
   }
-};
-
-const drawGame = () => {
-  const faults = game.getNumberOfFaults();
-
-  DOM.drawingMessage.innerText = MESSAGES[faults];
-  DOM.drawingContainer.innerHTML = DRAWING_PARTS.slice(0, faults).join('');
-
-  DOM.chars.innerHTML = game
-    .getCharList()
-    .map(
-      (char) =>
-        `<div class="chars_char ${char.isLetter ? 'chars_char--is-letter' : ''}">${char.show ? char.value : ''}</div>`,
-    )
-    .join('');
-
-  const found = game.getFoundLetters();
-  const faulty = game.getFaultyLetters();
-
-  DOM.keyboard.innerHTML = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'
-    .split('')
-    .map((letter) => {
-      const isFound = found.includes(letter);
-      const isFaulty = faulty.includes(letter);
-      const classNames = `keyboard_key ${isFound ? 'keyboard_key--found' : ''} ${isFaulty ? 'keyboard_key--is-faulty' : ''}`;
-
-      return `<button class="${classNames.trim()}" ${isFound || isFaulty ? 'disabled' : ''} data-letter="${letter}">${letter}</button>`;
-    })
-    .join('');
-};
-
-DOM.keyboard.addEventListener('click', (e) => {
-  if (e.target.matches('button')) guessLetter(e.target.dataset.letter);
 });
 
-DOM.newGameBtn.addEventListener('click', initNewGame);
+$('#new-game-button').addEventListener('click', initNewGame);
 
-window.addEventListener('keydown', (e) => {
-  const modalVisible = DOM.modal.style.display !== 'none';
-  const canRestart = game?.isFinished() && modalVisible;
+window.addEventListener('keydown', e => {
+  const isModalOpen = DOM.modal.style.display !== 'none';
 
-  // Handle Game Restart
-  if (canRestart && (e.code === 'Space' || e.code === 'Enter')) {
+  if (isModalOpen && game?.isFinished && ['Space', 'Enter'].includes(e.code)) {
     e.preventDefault();
     return initNewGame();
   }
 
-  // Handle Letter Guessing
-  const isModifier = e.altKey || e.ctrlKey || e.metaKey || e.shiftKey;
-  const key = e.key.toUpperCase();
-
-  if (!modalVisible && !isModifier && /^[A-Z]$/.test(key)) {
-    guessLetter(key);
+  if (!isModalOpen && /^[A-Z]$/i.test(e.key) && !e.ctrlKey && !e.altKey && !e.metaKey) {
+    game.guess(e.key);
+    render();
   }
 });
 
-document.addEventListener('contextmenu', (e) => e.preventDefault());
+document.addEventListener('contextmenu', e => e.preventDefault());
 
 initNewGame();
