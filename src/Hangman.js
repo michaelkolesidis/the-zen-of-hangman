@@ -1,86 +1,85 @@
 export class Hangman {
   MAX_FAULTS = 9;
 
+  #word;
+  #targetLetters;
+  #pickedLetters = new Set();
+  #faults = 0;
+  #onEndGame;
+
   constructor(word, onEndGame) {
-    this.word = word.toUpperCase();
-    this.pickedLetters = [];
-    this.faults = 0;
-    this.onEndGame = onEndGame;
+    this.#word = word.toUpperCase();
+    this.#onEndGame = onEndGame;
+
+    const lettersOnly = this.#word.match(/[A-Z]/g) || [];
+    this.#targetLetters = new Set(lettersOnly);
   }
 
   getWord() {
-    return this.word;
+    return this.#word;
   }
 
   getCharsOfWord() {
-    return this.word.split('');
+    return [...this.#word];
   }
 
   getLettersOfWord() {
-    const chars = this.getCharsOfWord();
-    return chars
-      .filter((char) => char.match(/[A-Z]/))
-      .filter((char, index, list) => list.indexOf(char) === index);
+    return [...this.#targetLetters];
   }
 
   getNumberOfFaults() {
-    return this.faults;
+    return this.#faults;
   }
 
   getFaultyLetters() {
-    return this.pickedLetters.filter((letter) => {
-      return !this.word.includes(letter);
-    });
+    return [...this.#pickedLetters].filter(
+      (letter) => !this.#targetLetters.has(letter),
+    );
   }
 
   getFoundLetters() {
-    return this.pickedLetters.filter((letter) => {
-      return this.word.includes(letter);
-    });
+    return [...this.#pickedLetters].filter((letter) =>
+      this.#targetLetters.has(letter),
+    );
   }
 
   getCharList() {
-    const chars = this.getCharsOfWord();
-    return chars.map((char) => {
-      const isLetter = char.match(/[A-z]/);
-      const pickedLetterAlready = this.pickedLetters.includes(char);
-      const show = pickedLetterAlready || !isLetter;
+    return [...this.#word].map((char) => {
+      const isLetter = /[A-Z]/.test(char);
+      const show = this.#pickedLetters.has(char) || !isLetter;
       return { isLetter, show, value: char };
     });
   }
 
   pickedLetter(letter) {
-    const alreadyPicked = this.pickedLetters.includes(letter);
-    const contains = this.word.includes(letter);
+    const char = letter.toUpperCase();
 
-    if (alreadyPicked) {
+    if (this.isFinished() || this.#pickedLetters.has(char)) {
       return;
     }
 
-    this.pickedLetters.push(letter);
+    this.#pickedLetters.add(char);
 
-    if (!contains) {
-      this.pickedLetters.push(letter);
-      this.faults += 1;
+    if (!this.#targetLetters.has(char)) {
+      this.#faults++;
     }
 
     if (this.isFinished()) {
-      this.onEndGame();
+      this.#onEndGame?.();
     }
   }
 
   hasWon() {
-    const letters = this.getLettersOfWord();
-    return (
-      !this.hasLost() &&
-      letters.every((char) => {
-        return this.pickedLetters.includes(char);
-      })
-    );
+    if (this.hasLost() || this.#targetLetters.size === 0) return false;
+
+    for (const char of this.#targetLetters) {
+      if (!this.#pickedLetters.has(char)) return false;
+    }
+    return true;
   }
 
   hasLost() {
-    return this.faults >= this.MAX_FAULTS;
+    return this.#faults >= this.MAX_FAULTS;
   }
 
   isFinished() {

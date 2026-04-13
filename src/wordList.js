@@ -5937,7 +5937,6 @@ export const wordList = [
   'advertisements',
   'quarters',
   'stolen',
-  'sublimedirectory',
   'soonest',
   'haiti',
   'disturbed',
