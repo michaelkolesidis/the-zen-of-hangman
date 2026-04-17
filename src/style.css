@@ -27,6 +27,52 @@ body {
   background-color: var(--bg);
 }
 
+.site-logo {
+  left: 10px;
+  position: absolute;
+  top: 10px;
+  width: 220px;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+}
+
+#mobile-logo {
+  display: none;
+}
+
+.site-logo-img {
+  width: 100%;
+  -webkit-user-drag: none;
+}
+
+@media screen and (max-width: 600px) {
+  .site-logo {
+    opacity: 0.85;
+    width: 50px;
+  }
+
+  #mobile-logo {
+    display:block;
+  }
+
+  #desktop-logo {
+    display: none;
+  }
+}
+
+@media (hover: hover) {
+  .site-logo:hover {
+    transform: scale(1.033);
+  }
+  .site-logo:active {
+    transform: scale(1);
+  }
+}
+
+.site-logo:focus {
+  outline: none;
+}
+
 header {
   text-align: center;
 }
