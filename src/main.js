@@ -28,7 +28,8 @@ const DRAWING_PARTS = [1, 2, 3, 4, 5, '6a', '6b', '7a', '7b'].map(
 
 const toggleModal = (show, content = '') => {
   if (content) DOM.modalContent.innerHTML = content;
-  DOM.modal.style.display = show ? '' : 'none';
+  DOM.modal.classList.toggle('modal--is-open', show);
+  DOM.modal.setAttribute('aria-hidden', show ? 'false' : 'true');
 };
 
 const handleGameEnd = () => {
@@ -75,7 +76,7 @@ DOM.keyboard.addEventListener('click', e => {
 $('#new-game-button').addEventListener('click', initNewGame);
 
 window.addEventListener('keydown', e => {
-  const isModalOpen = DOM.modal.style.display !== 'none';
+  const isModalOpen = DOM.modal.classList.contains('modal--is-open');
 
   if (isModalOpen && game?.isFinished && ['Space', 'Enter'].includes(e.code)) {
     e.preventDefault();
