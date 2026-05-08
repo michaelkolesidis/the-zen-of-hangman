@@ -96,13 +96,9 @@ footer {
   font-weight: 600;
 }
 
-footer a {
-  color: var(--main);
-  text-decoration: none;
-}
-
-footer a:hover {
-  text-decoration: underline;
+footer p {
+  font-weight: 700;
+  margin: 0;
 }
 
 .chars {
@@ -383,6 +379,7 @@ footer a:hover {
   #mobile-title {
     display: block;
     font-size: 1.2rem;
+    margin: 0;
   }
 
   .drawing_container {
